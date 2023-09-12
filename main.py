@@ -35,8 +35,8 @@ class DocumentIntelligence(AddOn):
                     "positions": [],
                 }
                 pages.append(dc_page)
-        resp = self.client.patch(f"documents/{document.id}/", json={"pages": pages})
-        resp.raise_for_status()
+            resp = self.client.patch(f"documents/{document.id}/", json={"pages": pages})
+            resp.raise_for_status()
 
 if __name__ == "__main__":
     DocumentIntelligence().main()
