@@ -3,6 +3,7 @@ This Add-On uses Azure's Document Intelligence API
 to perform OCR on documents within DocumentCloud
 """
 import os
+import re
 from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
 from documentcloud.addon import AddOn
@@ -30,7 +31,7 @@ class DocumentIntelligence(AddOn):
             for i,page in enumerate(result.pages):
                 dc_page = {
                     "page_number": i,
-                    "text": '\n'.join([line.content for line in page.lines]),
+                    "text": '\n'.join(['' if re.match(r'^[:.\-]*$', line.content.strip()) else line.content for line in page.lines]),
                     "ocr": "azuredi",
                     "positions": [],
                 }
