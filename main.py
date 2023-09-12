@@ -62,7 +62,7 @@ class DocumentIntelligence(AddOn):
                         "y1": y1,
                         "y2": y2,
                     }
-                    page["positions"].append(position_info)
+                    dc_page["positions"].append(position_info)
 
                 pages.append(dc_page)
 
