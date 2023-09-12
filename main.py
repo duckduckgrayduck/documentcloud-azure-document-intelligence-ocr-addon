@@ -53,7 +53,7 @@ class DocumentIntelligence(AddOn):
                     "ocr": "azuredi",
                     "positions": [],
                 }
-                for word in page.words
+                for word in page.words:
                     x1, x2, y1, y2 = self.convert_coordinates(word.polygon, page.width, page.height)
                     position_info = {
                         "text": word.content,
