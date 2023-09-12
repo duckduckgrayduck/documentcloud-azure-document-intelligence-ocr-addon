@@ -10,6 +10,24 @@ from documentcloud.addon import AddOn
 
 class DocumentIntelligence(AddOn):
     """Class for Document Intelligence Add-On"""
+    def convert_coordinates(self, polygon, page_width, page_height):
+            """ Converts Azure's absolute coordinates to relative
+                page coordinates used by Documentcloud
+            """
+            x_values = [point.x for point in polygon]
+            y_values = [point.y for point in polygon]
+
+            x1 = min(x_values)
+            x2 = max(x_values)
+            y1 = min(y_values)
+            y2 = max(y_values)
+
+            x1_percentage = max(0, min(1, (x1 / page_width)))
+            x2_percentage = max(0, min(1, (x2 / page_width)))
+            y1_percentage = max(0, min(1, (y1 / page_height)))
+            y2_percentage = max(0, min(1, (y2 / page_height)))
+
+            return x1_percentage, x2_percentage, y1_percentage, y2_percentage
 
     def main(self):
         """The main add-on functionality goes here."""
@@ -35,7 +53,20 @@ class DocumentIntelligence(AddOn):
                     "ocr": "azuredi",
                     "positions": [],
                 }
+                for line in page.lines:
+                    for word in line:
+                        x1, x2, y1, y2 = self.convert_coordinates(word.polygon, page.width, page.height)
+                        position_info = {
+                            "text": word.content,
+                            "x1": x1,
+                            "x2": x2,
+                            "y1": y1,
+                            "y2": y2,
+                        }
+                        page["positions"].append(position_info)
+
                 pages.append(dc_page)
+
             resp = self.client.patch(f"documents/{document.id}/", json={"pages": pages})
             resp.raise_for_status()
 
