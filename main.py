@@ -18,6 +18,10 @@ class DocumentIntelligence(AddOn):
             endpoint=endpoint, credential=AzureKeyCredential(key)
         )
         for document in self.get_documents():
+            if document.access != "public":
+                self.set_message("Document must be public")
+                return
+            formUrl = document.pdf_url
             poller = document_analysis_client.begin_analyze_document_from_url(
                 "prebuilt-read", formUrl
             )
@@ -31,6 +35,8 @@ class DocumentIntelligence(AddOn):
                     "positions": [],
                 }
                 pages.append(dc_page)
+        resp = self.client.patch(f"documents/{document.id}/", json={"pages": pages})
+        resp.raise_for_status()
 
 if __name__ == "__main__":
     DocumentIntelligence().main()
