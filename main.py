@@ -53,17 +53,16 @@ class DocumentIntelligence(AddOn):
                     "ocr": "azuredi",
                     "positions": [],
                 }
-                for line in page.lines:
-                    for word in line:
-                        x1, x2, y1, y2 = self.convert_coordinates(word.polygon, page.width, page.height)
-                        position_info = {
-                            "text": word.content,
-                            "x1": x1,
-                            "x2": x2,
-                            "y1": y1,
-                            "y2": y2,
-                        }
-                        page["positions"].append(position_info)
+                for word in page.words
+                    x1, x2, y1, y2 = self.convert_coordinates(word.polygon, page.width, page.height)
+                    position_info = {
+                        "text": word.content,
+                        "x1": x1,
+                        "x2": x2,
+                        "y1": y1,
+                        "y2": y2,
+                    }
+                    page["positions"].append(position_info)
 
                 pages.append(dc_page)
 
