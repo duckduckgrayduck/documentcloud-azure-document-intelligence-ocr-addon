@@ -56,7 +56,9 @@ class DocumentIntelligence(AddOn):
 
     def main(self):
         """The main add-on functionality goes here."""
-        self.validate()
+        if not self.validate():
+            # if not validated, return immediately
+            return
         key = os.environ.get('KEY')
         endpoint = os.environ.get('TOKEN')
         document_analysis_client = DocumentAnalysisClient(
