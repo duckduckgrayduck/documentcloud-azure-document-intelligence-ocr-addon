@@ -10,6 +10,31 @@ from documentcloud.addon import AddOn
 
 class DocumentIntelligence(AddOn):
     """Class for Document Intelligence Add-On"""
+
+     def validate(self):
+        """Validate that we can run the OCR"""
+        if self.get_document_count() is None:
+            self.set_message(
+                "It looks like no documents were selected. Search for some or "
+                "select them and run again."
+            )
+            return False
+        elif not self.org_id:
+            self.set_message("No organization to charge.")
+            return False
+        else:
+            num_pages = 0
+            for document in self.get_documents():
+                num_pages += document.page_count
+            resp = self.client.post(
+                f"organizations/{self.org_id}/ai_credits/",
+                json={"ai_credits": num_pages},
+            )
+            if resp.status_code != 200:
+                self.set_message("Error charging AI credits.")
+                return False
+        return True
+
     def convert_coordinates(self, polygon, page_width, page_height):
             """ Converts Azure's absolute coordinates to relative
                 page coordinates used by Documentcloud
@@ -31,6 +56,7 @@ class DocumentIntelligence(AddOn):
 
     def main(self):
         """The main add-on functionality goes here."""
+        self.validate()
         key = os.environ.get('KEY')
         endpoint = os.environ.get('TOKEN')
         document_analysis_client = DocumentAnalysisClient(
