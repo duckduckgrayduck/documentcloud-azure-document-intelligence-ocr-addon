@@ -11,7 +11,7 @@ from documentcloud.addon import AddOn
 class DocumentIntelligence(AddOn):
     """Class for Document Intelligence Add-On"""
 
-     def validate(self):
+    def validate(self):
         """Validate that we can run the OCR"""
         if self.get_document_count() is None:
             self.set_message(
