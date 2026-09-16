@@ -1,11 +1,21 @@
 title: Azure Document Intelligence OCR
-description: This Add-On uses Azure's Document Intelligence API to OCR documents. 
+description: This Add-On uses Azure's Document Intelligence API to OCR documents.
+instructions: ''
 type: object
 documents:
   - selected
-properties: {}
+properties: 
+  to_tag:
+    title: Tag OCR'd documents?
+    type: boolean
+    description: "If selected, the key/value pair of ocr_engine:azure will be added to the document as metadata"
 categories: 
   - extraction
   - premium
 # Acceptable categories are premium, ai, export, bulk, file,  monitor, statistical, and extraction. 
 # You can read more about DocumentCloud Add-On categories here: https://www.documentcloud.org/help/add-ons#types-of-add-ons
+cost:
+  price: 1
+  amount: 1
+  unit: page
+version: 2
